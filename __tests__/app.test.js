@@ -19,7 +19,7 @@ const registerAndLogin = async (userProps = {}) => {
 
   const { email } = user;
   await agent.post('/api/v1/users/sessions').send({ email, password });
-  console.log(user);
+  // console.log(user);
   return [agent, user];
 };
 
