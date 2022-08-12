@@ -49,7 +49,7 @@ describe('backend-express-template routes', () => {
   });
 
   it('/protected should return a 401 if not authenticated', async () => {
-    const res = await request(app).get('/api/v1/protected');
+    const res = await request(app).get('/api/v1/users/protected');
     expect(res.status).toEqual(401);
   });
 
