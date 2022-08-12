@@ -18,8 +18,8 @@ const registerAndLogin = async (userProps = {}) => {
   const user = await UserServices.create({ ...mockUser, ...userProps });
 
   const { email } = user;
-  await agent.post('/api/v1/auth/login').send({ email, password });
-  // console.log({ user });
+  await agent.post('/api/v1/users/sessions').send({ email, password });
+  console.log(user);
   return [agent, user];
 };
 
@@ -44,7 +44,6 @@ describe('backend-express-template routes', () => {
     const res = await request(app)
       .post('/api/v1/users/sessions')
       .send({ email: mockUser.email, password: mockUser.password });
-    console.log('hey res body', res.body);
     expect(res.status).toEqual(200);
   });
 
@@ -53,16 +52,25 @@ describe('backend-express-template routes', () => {
     expect(res.status).toEqual(401);
   });
 
-  it('/protected should return the current user if authenticated', async () => {
-    const [agent, user] = await registerAndLogin();
-    const res = await agent.get('/api/v1/users/protected');
-    expect(res.body).toEqual(user);
-  });
-
   it('/users should return a 401 if user not admin', async () => {
     const [agent] = await registerAndLogin();
     const res = await agent.get('/api/v1/users');
-    expect(res.status).toEqual(401);
+    expect(res.status).toEqual(403);
+  });
+
+  it('/users should return a 200 if user is admin', async () => {
+    const agent = request.agent(app);
+
+    await agent.post('/api/v1/users').send({
+      email: 'admin',
+      password: '12345',
+    });
+    await agent
+      .post('/api/v1/users/sessions')
+      .send({ email: 'admin', password: '12345' });
+
+    const res = await agent.get('/api/v1/users');
+    expect(res.status).toEqual(200);
   });
 
   afterAll(() => {
