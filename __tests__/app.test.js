@@ -53,6 +53,12 @@ describe('backend-express-template routes', () => {
     expect(res.status).toEqual(401);
   });
 
+  it('/users should return a 401 if user not admin', async () => {
+    const [agent] = await registerAndLogin();
+    const res = await agent.get('/api/v1/users');
+    expect(res.status).toEqual(403);
+  });
+
   afterAll(() => {
     pool.end();
   });
