@@ -28,13 +28,14 @@ describe('backend-express-template routes', () => {
     return setup(pool);
   });
 
-  it.only('creates a new user', async () => {
+  it('creates a new user', async () => {
     const res = await request(app).post('/api/v1/users').send(mockUser);
     const { email } = mockUser;
 
     expect(res.body).toEqual({
       id: expect.any(String),
       email,
+      // passwordHash: expect.any(String),
     });
   });
 
@@ -42,7 +43,8 @@ describe('backend-express-template routes', () => {
     await request(app).post('/api/v1/users').send(mockUser);
     const res = await request(app)
       .post('/api/v1/users/sessions')
-      .send({ email: 'test@example.com', password: '12345' });
+      .send({ email: mockUser.email, password: mockUser.password });
+    console.log('hey res body', res.body);
     expect(res.status).toEqual(200);
   });
 
