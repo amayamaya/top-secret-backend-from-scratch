@@ -85,6 +85,19 @@ describe('backend-express-template routes', () => {
     expect(res.status).toEqual(204);
   });
 
+  it('GET /api/v1/secrets returns a list of secrets', async () => {
+    const [agent] = await registerAndLogin();
+    const res = await agent.get('/api/v1/secrets');
+    const secret = {
+      title: expect.any(String),
+      description: expect.any(String),
+      created_at: expect.any(String),
+    };
+    //sub zero a way to access an item within an array.
+    // only checking the first item in the array check for title, created, and description
+    expect(res.body[0]).toEqual(secret);
+  });
+
   afterAll(() => {
     pool.end();
   });

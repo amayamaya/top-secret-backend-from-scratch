@@ -22,6 +22,3 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           SALT_ROUNDS: ${{ secrets.SALT_ROUNDS }}
           COOKIE_NAME: ${{ secrets.COOKIE_NAME }}
-          GHUB_CLIENT_ID: ${{ secrets.GHUB_CLIENT_ID }}
-          GHUB_SECRET: ${{ secrets.GHUB_SECRET }}
-          GHUB_REDIRECT_URI: ${{ secrets.GHUB_REDIRECT_URI }}
