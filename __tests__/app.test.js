@@ -85,13 +85,24 @@ describe('backend-express-template routes', () => {
     expect(res.status).toEqual(204);
   });
 
-  it('GET /api/v1/secrets returns a list of secrets', async () => {
-    const [agent] = await registerAndLogin();
+  it('GET /api/v1/secrets returns a list of secrets for autenticated users', async () => {
+    const agent = request.agent(app);
+
+    await agent.post('/api/v1/users').send({
+      email: 'admin',
+      password: '12345',
+    });
+    await agent
+      .post('/api/v1/users/sessions')
+      .send({ email: 'admin', password: '12345' });
+
     const res = await agent.get('/api/v1/secrets');
+    console.log(res.body);
     const secret = {
+      id: expect.any(String),
       title: expect.any(String),
       description: expect.any(String),
-      created_at: expect.any(String),
+      createdAt: expect.any(String),
     };
     //sub zero a way to access an item within an array.
     // only checking the first item in the array check for title, created, and description
